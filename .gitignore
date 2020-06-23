@@ -3,4 +3,5 @@
 .RData
 .Ruserdata
 test.Rproj
-README.html
+*.html
+/data/*.csv
