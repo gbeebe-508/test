@@ -6,25 +6,33 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+
+knitr::opts_chunk$set(echo = FALSE)             #setting echo = F prevents code blocks from being included
+library(tidyverse)
+library(lubridate)
+
+raw_project <- read_csv("data/Project.csv")
+raw_organization <- read_csv("data/Organization.csv")
+
 ```
 
-## R Markdown
+## HMIS Participating Agencies
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+You can add a code chunk manually, using the Insert button at the top, or with CTRL + ALT + "I"
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r participating}
 
-```{r cars}
-summary(cars)
+hmis_participating <- raw_project %>%           #ALT + "-" gives you "<-" 
+  filter(HMISParticipatingProject == 1)
+
 ```
 
-## Including Plots
+```{r orgsize}
 
-You can also embed plots, for example:
+org_size <- hmis_participating %>%
+  left_join(raw_organization, by = "OrganizationID") %>%
+  group_by(OrganizationName) %>%
+  summarise(Projects = n())                     # n() gives you a basic count
 
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
